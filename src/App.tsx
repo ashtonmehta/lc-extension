@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import StatusForm from "./components/StatusForm";
 import Container from "./components/Container";
 import NavBar from "./components/NavBar";
@@ -6,15 +6,15 @@ import Review from "./components/Review";
 import { URL_PATTERN } from "./constants";
 import { getProblemNameFromUrl } from "./utils";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
-import { updateName } from "./features/problemSlice";
-import { useGetAllUsersQuery } from "./features/apiSlice";
+import { updateName, updateValidPage } from "./features/problemSlice";
 import "./index.css";
 
 function App() {
-  const [isValidPage, setIsValidPage] = useState(true);
   const problemName = useAppSelector((state) => state.problemReducer.name);
+  const isValidPage = useAppSelector(
+    (state) => state.problemReducer.isValidPage
+  );
   const dispatch = useAppDispatch();
-  const { data } = useGetAllUsersQuery();
 
   useEffect(() => {
     /**
@@ -29,11 +29,12 @@ function App() {
 
       const URL: string = tab.url!;
 
-      if (!URL_PATTERN.test(URL)) {
-        setIsValidPage(false);
+      if (URL_PATTERN.test(URL)) {
+        dispatch(updateValidPage(true));
+        const name: string = getProblemNameFromUrl(URL);
+        dispatch(updateName(name));
       }
-      const name: string = getProblemNameFromUrl(URL);
-      dispatch(updateName(name));
+      
     }
 
     checkIfValidPage();
@@ -46,7 +47,6 @@ function App() {
         <StatusForm title={problemName} />
       )}
       <Review />
-      {data && data.map((user) => <p>{user.id} {user.username}</p>)}
     </Container>
   );
 }

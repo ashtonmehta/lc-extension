@@ -1,16 +1,25 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { User } from "../types";
+import { Attempt, User, Problem } from "../types";
 
-type UsersResponse = User[];
+type CreateAttemptRequest = Attempt;
+type CreateAttemptResponse = {
+  user: User;
+  problem: Problem;
+  id: number;
+} & Pick<Attempt, "status" | "date">;
 
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000" }),
   endpoints: (builder) => ({
-    getAllUsers: builder.query<UsersResponse, void>({
-      query: () => "/users",
+    createAttempt: builder.mutation<CreateAttemptResponse, CreateAttemptRequest>({
+      query: (body) => ({
+        url: "/attempts",
+        method: "POST",
+        body,
+      }),
     }),
   }),
 });
 
-export const { useGetAllUsersQuery } = apiSlice;
+export const { useCreateAttemptMutation } = apiSlice;
