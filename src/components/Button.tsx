@@ -1,6 +1,6 @@
 import "../index.css";
 
-interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: string;
   color: "green" | "yellow" | "red" | "blue";
   onClick: () => void;

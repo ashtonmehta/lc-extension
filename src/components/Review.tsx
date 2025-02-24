@@ -4,10 +4,13 @@ import Button from "./Button";
 import "../index.css";
 import { useGetReviewProblemsQuery } from "../features/apiSlice";
 import { Problem } from "../types";
+import { useAppSelector } from "../app/hooks";
 
 const Review: React.FC = () => {
-  const { data: problems, isSuccess } =
-    useGetReviewProblemsQuery("ashtonmehta");
+  const username = useAppSelector((state) => state.authReducer.username);
+  const { data: problems, isSuccess } = useGetReviewProblemsQuery(username!, {
+    skip: !username,
+  });
 
   if (!isSuccess) {
     return null;
@@ -18,7 +21,9 @@ const Review: React.FC = () => {
       return;
     }
     await Promise.all(
-      problems.map((problem: Problem) => chrome.tabs.create({ url: problem.link }))
+      problems.map((problem: Problem) =>
+        chrome.tabs.create({ url: problem.link })
+      )
     );
   };
 

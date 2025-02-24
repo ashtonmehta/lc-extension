@@ -7,6 +7,7 @@ import { URL_PATTERN } from "./constants";
 import { getProblemNameFromUrl } from "./utils";
 import { useAppDispatch, useAppSelector } from "./app/hooks";
 import { updateName, updateValidPage } from "./features/problemSlice";
+import SignIn from "./components/SignIn";
 import "./index.css";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
   const isValidPage = useAppSelector(
     (state) => state.problemReducer.isValidPage
   );
+  const username = useAppSelector((state) => state.authReducer.username);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -40,10 +42,14 @@ function App() {
     checkIfValidPage();
   }, [dispatch]);
 
+  if (!username) {
+    return <SignIn />;
+  }
+
   return (
     <Container className="bg-customWhite w-[400px] h-[300px]">
       <NavBar />
-      {isValidPage && problemName.length > 0 && (
+      {isValidPage && problemName && (
         <StatusForm title={problemName} />
       )}
       <Review />

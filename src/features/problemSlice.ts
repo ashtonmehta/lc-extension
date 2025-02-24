@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ProblemState {
-    name: string;
+    name: string | null;
     isValidPage: boolean;
 }
 
 const initialState: ProblemState = {
-    name: 'blank',
-    isValidPage: true
+    name: null,
+    isValidPage: false
 }
 
 const problemSlice = createSlice({
