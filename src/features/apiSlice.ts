@@ -8,6 +8,8 @@ type CreateAttemptResponse = {
   id: number;
 } & Pick<Attempt, "status" | "date">;
 
+type GetReviewProblemsResponse = Problem[];
+
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000" }),
@@ -19,7 +21,13 @@ export const apiSlice = createApi({
         body,
       }),
     }),
+    getReviewProblems: builder.query<GetReviewProblemsResponse, string>({
+      query: (username) => ({
+        url: `/problems/dueProblems/${username}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useCreateAttemptMutation } = apiSlice;
+export const { useCreateAttemptMutation, useGetReviewProblemsQuery } = apiSlice;
